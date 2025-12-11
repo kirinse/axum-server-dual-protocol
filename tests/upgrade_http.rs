@@ -1,5 +1,5 @@
 #![cfg(test)]
-#![allow(clippy::missing_assert_message)]
+#![allow(clippy::missing_assert_message, missing_docs)]
 
 mod util;
 
@@ -60,7 +60,7 @@ async fn test(certificate: Certificate, address: SocketAddr) -> Result<()> {
 
 	// HTTP index.
 	let response = client.get(format!("http://{address}")).send().await?;
-	assert_eq!(response.status(), StatusCode::MOVED_PERMANENTLY);
+	assert_eq!(response.status(), StatusCode::PERMANENT_REDIRECT);
 	assert_eq!(
 		*response.headers().get(LOCATION).unwrap(),
 		format!("https://{address}/")
@@ -69,7 +69,7 @@ async fn test(certificate: Certificate, address: SocketAddr) -> Result<()> {
 
 	// HTTP not-existing path.
 	let response = client.get(format!("http://{address}/test")).send().await?;
-	assert_eq!(response.status(), StatusCode::MOVED_PERMANENTLY);
+	assert_eq!(response.status(), StatusCode::PERMANENT_REDIRECT);
 	assert_eq!(
 		*response.headers().get(LOCATION).unwrap(),
 		format!("https://{address}/test")

@@ -19,7 +19,7 @@ version = "0.7.0"
 default = ["rustls/aws-lc-rs"]
 
 [dependencies]
-axum-server = { version = "0.7.1", default-features = false, features = ["tls-rustls-no-provider"] }
+axum-server = { version = "0.8", default-features = false, features = ["tls-rustls-no-provider"] }
 bytes = { version = "1", default-features = false }
 http = "1"
 http-body-util = "0.1"
@@ -33,10 +33,10 @@ tower-service = "0.3"
 
 [dev-dependencies]
 anyhow = "1"
-axum = { version = "0.7", default-features = false }
+axum = { version = "0.8", default-features = false }
 futures-util = { version = "0.3", default-features = false }
 hyper = "1"
-rcgen = { version = "0.13", default-features = false, features = ["aws_lc_rs"] }
+rcgen = { version = "0.14", default-features = false, features = ["aws_lc_rs"] }
 reqwest = { version = "0.12", default-features = false, features = [
 	"rustls-tls-manual-roots-no-provider",
 ] }

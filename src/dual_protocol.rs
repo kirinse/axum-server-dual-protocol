@@ -5,7 +5,7 @@
 use std::fmt::{self, Debug, Formatter};
 use std::future::Future;
 use std::io::ErrorKind;
-use std::net::{SocketAddr, TcpListener};
+use std::net::SocketAddr;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::{io, slice};
@@ -18,7 +18,7 @@ use http::{Request, Response};
 use http_body_util::{Either as BodyEither, Empty};
 use pin_project::pin_project;
 use tokio::io::ReadBuf;
-use tokio::net::TcpStream;
+use tokio::net::{TcpListener, TcpStream};
 use tokio_rustls::server::TlsStream;
 use tokio_util::either::Either as TokioEither;
 use tower_service::Service as TowerService;
@@ -31,7 +31,7 @@ use crate::UpgradeHttp;
 pub fn bind_dual_protocol(
 	address: SocketAddr,
 	config: RustlsConfig,
-) -> Server<DualProtocolAcceptor> {
+) -> Server<SocketAddr, DualProtocolAcceptor> {
 	let acceptor = DualProtocolAcceptor::new(config);
 
 	Server::bind(address).acceptor(acceptor)
@@ -43,10 +43,10 @@ pub fn bind_dual_protocol(
 pub fn from_tcp_dual_protocol(
 	listener: TcpListener,
 	config: RustlsConfig,
-) -> Server<DualProtocolAcceptor> {
+) -> Server<SocketAddr, DualProtocolAcceptor> {
 	let acceptor = DualProtocolAcceptor::new(config);
 
-	Server::from_tcp(listener).acceptor(acceptor)
+	Server::from_listener(listener).acceptor(acceptor)
 }
 
 /// Supplies configuration methods for [`Server`] with [`DualProtocolAcceptor`].
@@ -60,7 +60,7 @@ pub trait ServerExt {
 	fn set_upgrade(self, upgrade: bool) -> Self;
 }
 
-impl ServerExt for Server<DualProtocolAcceptor> {
+impl ServerExt for Server<SocketAddr, DualProtocolAcceptor> {
 	fn set_upgrade(mut self, upgrade: bool) -> Self {
 		self.get_mut().set_upgrade(upgrade);
 		self

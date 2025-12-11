@@ -128,7 +128,7 @@ where
 					let uri = uri.build().expect("invalid path and query");
 
 					response
-						.status(StatusCode::MOVED_PERMANENTLY)
+						.status(StatusCode::PERMANENT_REDIRECT)
 						.header(LOCATION, uri.to_string())
 				} else {
 					// If we can't extract the host or have an unknown scheme, tell the client there
